@@ -13,15 +13,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Auth::routes();
+
+
+Route::group(['middleware' => 'guest'], function () {
+
+    Route::get('/', function () {
+        return view('auth.login');
+    });
+});
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),
-        'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]
+        'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' , 'auth' ]
     ],
     function(){
 
-        Route::get('/', function()
-    {
-    return View::make('dashboard');
-    });
+        Route::get('/home', 'HomeController@index')->name('home');
+        Route::resource('grade', 'GradeController');
 });
+
+
+
